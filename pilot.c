@@ -1,63 +1,42 @@
-#include <unistd.h>
+#include "pilot.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <tgmath.h>
+#include <math.h>
 
-#include "pilot.h"
-#include "move.h"
-#include "robot.h"
 
 static int encoder_target;
-static move_type_t encoder_reference;
 
-static int start_ticks;
-
-static void pilot_read_enter() {
-    int c = getchar();
-    if (c == 11410) {
-
-    }
-}
-
-extern void pilot_init(void) {
+void pilot_init(){
     robot_init();
 }
 
-extern bool pilot_stop_at_target() {
-    int target_ticks;
+void pilot_start_move(move_t move){
+    robot_reset_encoder();
 
-    if (encoder_reference == MOVE_FORWARD) {
-        target_ticks = round(34.6 * encoder_target);
-    } else {
-        target_ticks = round(2.53 * encoder_target);
+    if (move.type==MOVE_FORWARD){
+        robot_start_forward();
+        encoder_target=round(34.6*move.magnitude);
+
     }
 
-    int current_ticks = robot_get_encoder().left;
-    int distance_parcourue = abs(current_ticks - start_ticks);
+    else if(move.type==MOVE_TURN ){
+        robot_turn(DIR_DROITE);
+        encoder_target= round(2.53*move.magnitude);
 
-    return (distance_parcourue >= target_ticks);
+    }
+
+
+
 }
 
-extern void pilot_start_move(move_t move) {
-    encoder_target = move.magnitude;
-    encoder_reference = move.type;
-    start_ticks = robot_get_encoder().left;
-
-    if (encoder_reference == MOVE_FORWARD) {
-        robot_start_forward();
-        while (!pilot_stop_at_target()) {
-            usleep(3200);
-            pilot_read_enter();
-        }
+bool pilot_stop_at_target(){
+    bool ret=false;
+    encoder_t enc;
+    enc = robot_get_encoder();
+    printf("valeur : %d, valeur limite : %d   \r",abs(enc.left),encoder_target);
+    if (abs(enc.left)>=encoder_target){
         robot_stop();
-    }
-
-    if (encoder_reference == MOVE_TURN) {
-        robot_turn(DIR_DROITE);
-        while (!pilot_stop_at_target()) {
-            usleep(3200);
-            pilot_read_enter();
-        }
-        robot_stop();
-    }
+        ret = true;
+    } 
+    return ret;
 }

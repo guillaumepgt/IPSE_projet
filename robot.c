@@ -8,6 +8,7 @@ static int speed_pct = 100;
 
 // PUBLIC FUNCTIONS DEFINITIONS -----------------------------------
 
+
 extern void robot_init(void)
 {
 //Initialisation du robot et vérification du bon démarrage
@@ -45,13 +46,13 @@ extern void robot_turn(direction_t dir)
     }
 }
 
-extern encoder_t robot_get_encoder() {
-	encoder_t enc;
-    enc.left=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
-    enc.right=mrpiz_motor_encoder_get(MRPIZ_MOTOR_RIGHT);
-    return enc;
+extern encoder_t robot_get_encoder(){
+    encoder_t ret;
+    ret.left=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
+    ret.right=mrpiz_motor_encoder_get(MRPIZ_MOTOR_RIGHT);
+    return ret;
 }
 
-extern void robot_reset_encoder(void) {
+extern void robot_reset_encoder(){
     mrpiz_motor_encoder_reset(MRPIZ_MOTOR_BOTH);
 }

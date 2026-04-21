@@ -1,45 +1,35 @@
+#include "copilot.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "copilot.h"
-#include "move.h"
+#define FILENAME "chemin.tsv"
+static int nb_move;
+static move_t* moves;
 
-static move_t *mouvements = NULL;
-static int total_mouvements = 0;
 
-extern int copilot_init(const char* name_file) {
-    FILE *fichier = fopen(name_file, "r");
-    fscanf(fichier, "%d", &total_mouvements);
-    mouvements = malloc(total_mouvements * sizeof(move_t));
+int init(char* name_file){  //FAIRE RESTE DU .C (F SUR LE TD) 
+    FILE *file =fopen(FILENAME, "r");
+    if(file==NULL){
+        perror("Erreur ouverture fichier");
+        return -1;
+    }   
 
-    char direction[20];
-    int valeur;
-    for (int i = 0; i < total_mouvements; i++) {
-        fscanf(fichier, "%s %d", direction, &valeur);
-        if (strcmp(direction, "forward") == 0) {
-            mouvements[i].type = MOVE_FORWARD;
-        } else if (strcmp(direction, "turn") == 0) {
-            mouvements[i].type = MOVE_TURN;
-        }
-        mouvements[i].magnitude = valeur;
+    if(fscanf(file,"%d\n",&nb_move)!=1){
+        printf("erreur lecture nb_move");
+        return -1;
     }
 
-    fclose(fichier);
-    return 1;
-}
-
-extern void move_provider_update_nb_move(int* nb) {
-    if (nb != NULL) {
-        *nb = total_mouvements;
+    moves = calloc(nb_move,sizeof(move_t));
+    if(moves==NULL){
+        printf("Erreur allocation memoire");
+        return -1;
     }
-}
-
-extern void move_provider_update_all_moves(move_t* tab_move) {
-    if (tab_move != NULL && mouvements != NULL) {
-        for (int i = 0; i < total_mouvements; i++) {
-            tab_move[i] = mouvements[i];
-        }
-        free(mouvements);
-        mouvements = NULL;
+    char line[100];
+    int new_move_amplitude;
+    for(int i=0; fscanf(file,"%s\t%d",line,&new_move_amplitude); i++){
+        moves[i].magnitude=new_move_amplitude;
+        if (strcmp(line,"forward")) moves[i].type=MOVE_FORWARD;
+        if (strcmp(line,"turn")) moves[i].type=MOVE_TURN;
     }
+
 }
