@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include "pilot.h"
 #include "move.h"
-#include "copilot.h"
+#include "autopilot.h"
 
 /**
  * @brief Point d'entrée principal du programme.
@@ -20,9 +20,7 @@
  */
 int main()
 {
-    pilot_init();
-    move_t move={MOVE_FORWARD,100};
-    pilot_start_move(move);
-    while(!pilot_stop_at_target()) usleep(100);
+    autopilot_init();
+    autopilot_run();
 }
 
