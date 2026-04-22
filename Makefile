@@ -11,7 +11,7 @@ CCFLAGS += -g -Wall -Wextra -I. -Iterminal
 LIB_MRPIZ = $(realpath $(wildcard ../lib_mrpiz*/))
 
 # Options de compilation pour l'utilisation de la bibliothèque MRPiZ
-export CCFLAGS += -DINTOX -DINTOX_ADDRESS=127.0.0.1 -DINTOX_PORT=12341
+export CCFLAGS += -DINTOX -DINTOX_ADDRESS=127.0.0.1 -DINTOX_PORT=12301
 CCFLAGS += -I$(LIB_MRPIZ)/include/mrpiz/
 LDFLAGS += -L$(LIB_MRPIZ)/lib/ -lintoxmrpiz -lintox -lm
 

@@ -1,6 +1,7 @@
 #include "robot.h"
 #include "mrpiz.h"
 #include <unistd.h>
+#include <stdio.h>
 
 static int speed_pct = 100;
 
@@ -55,9 +56,14 @@ proximity_t robot_get_proximity(void)
     proximity_t p;
 
     p.left = mrpiz_proxy_sensor_get(1);
-    p.center_left  = mrpiz_proxy_sensor_get(2);
     p.front = mrpiz_proxy_sensor_get(3);
-    p.center_right = mrpiz_proxy_sensor_get(4);
     p.right = mrpiz_proxy_sensor_get(5);
+
+    p.center_left = mrpiz_proxy_sensor_get(2);
+    if (p.center_left<0) p.center_left=p.left;
+    p.center_right = mrpiz_proxy_sensor_get(4);
+    if (p.center_right<0) p.center_right=p.right;
+
+
     return p;
 }
