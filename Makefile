@@ -19,25 +19,33 @@ LDFLAGS += -L$(LIB_MRPIZ)/lib/ -lintoxmrpiz -lintox -lm
 all: $(TARGET)
 
 # Construction de l'exécutable à partir des fichiers objets
-$(TARGET): main.o robot.o pilot.o autopilot.o
-	$(CC) main.o robot.o pilot.o autopilot.o $(LDFLAGS)  -o $(TARGET)
+$(TARGET): main.o remote.o robot.o autopilot.o input_detector.o terminal/terminal.o
+	$(CC) main.o remote.o robot.o input_detector.o terminal/terminal.o $(LDFLAGS) -o $(TARGET)
 
-# Compilation de main.c
-main.o: main.c autopilot.h
+# Compilation de main.c en main.o
+main.o: main.c input_detector.h autopilot.h
 	$(CC) $(CCFLAGS) -c main.c -o main.o
 
-# Compilation de robot.c
-robot.o: robot.c robot.h
+# Compilation de input_detector.c en input_detector.o
+input_detector.o: input_detector.c input_detector.h robot.h remote.h
+	$(CC) $(CCFLAGS) -c input_detector.c -o input_detector.o
+
+# Compilation de remote.c en remote.o
+remote.o: remote.c remote.h terminal/terminal.h
+	$(CC) $(CCFLAGS) -c remote.c -o remote.o
+
+# Compilation de robot.c en robot.o
+robot.o: robot.c robot.h remote.h
 	$(CC) $(CCFLAGS) -c robot.c -o robot.o
 
-# Compilation de pilot.c
-pilot.o: pilot.c pilot.h robot.h move.h
-	$(CC) $(CCFLAGS) -c pilot.c -o pilot.o
+# Compilation de terminal.c en terminal.o
+terminal.o: terminal/terminal.c terminal/terminal.h 
+	$(CC) $(CCFLAGS) -c terminal/terminal.c -o terminal/terminal.o
 
 # Compilation de autopilot.c
 autopilot.o: autopilot.c autopilot.h pilot.h robot.h move.h
 	$(CC) $(CCFLAGS) -c autopilot.c -o autopilot.o
 
-# Nettoyage
+# Nettoyage des fichiers générés
 clean:
-	rm -f $(TARGET) main.o robot.o pilot.o autopilot.o
+	rm -f $(TARGET) main.o remote.o robot.o input_detector.o terminal/terminal.o

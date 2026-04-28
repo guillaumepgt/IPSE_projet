@@ -73,3 +73,10 @@ proximity_t robot_get_proximity(void)
 
     return p;
 }
+
+bool robot_obstacle_detected(){
+  int distance;
+  distance = mrpiz_proxy_sensor_get(MRPIZ_PROXY_SENSOR_FRONT_CENTER);
+  //printf("distance :  %d        \r",distance);
+  return (distance<100);
+}
