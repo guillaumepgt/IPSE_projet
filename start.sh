@@ -7,17 +7,6 @@ sleep 0.5
 
 ROBOTS=(
     "MRPiZ yellow"
-    "MRPiZ orange"
-    "MRPiZ red"
-    "MRPiZ purple"
-    "MRPiZ magenta"
-    "MRPiZ pink"
-    "MRPiZ green"
-    "MRPiZ sky-blue"
-    "MRPiZ blue"
-    "MRPiZ black"
-    "MRPiZ grey"
-    "MRPiZ white"
 )
 
 PORT_BASE=12301

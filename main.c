@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "autopilot.h"
+#include "input_detector.h"
 
 #ifdef INTOX
 char * intox_address = "127.0.0.1";
@@ -17,6 +18,7 @@ int intox_port = 12301;
 
 int main(int argc, char *argv[])
 {
+
     if (argc > 1) {
 #ifdef INTOX
         intox_port = atoi(argv[1]);

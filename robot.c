@@ -46,7 +46,7 @@ void robot_turn(direction_t dir)
         mrpiz_motor_set(MRPIZ_MOTOR_RIGHT, speed_pct);
         break;
     }
-    mrpiz_motor_set(MRPIZ_MOTOR_BOTH,0);
+    //mrpiz_motor_set(MRPIZ_MOTOR_BOTH,0);
     if(moving) robot_start_forward();
 }
 

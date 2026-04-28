@@ -7,6 +7,7 @@
  */
 #include "remote.h"
 #include "robot.h"
+#include "pilot.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -20,7 +21,7 @@
  */
 void input_detector_init(void){
     remote_init();
-    robot_init();
+    pilot_init();
 }
 
 
@@ -32,6 +33,7 @@ void input_detector_init(void){
 int input_detector_run(void){
     command_t my_command;
     bool obstacle_ou_pas;
+    move_t move;
 
     while(1)
     {
@@ -61,13 +63,23 @@ int input_detector_run(void){
             break;
 
         case CMD_ROTATION_G:
+            move.type = MOVE_TURN;
+            move.magnitude = -10;
             printf("Tourner à gauche\n");
-            robot_turn(DIR_GAUCHE);
+            pilot_start_move(move);
+            while (!pilot_stop_at_target()) {
+                usleep(1000);
+            }
             break;
 
         case CMD_ROTATION_D:
+            move.type = MOVE_TURN;
+            move.magnitude = 10;
             printf("Tourner à droite\n");
-            robot_turn(DIR_DROITE);
+            pilot_start_move(move);
+            while (!pilot_stop_at_target()) {
+                usleep(1000);
+            }
             break; 
         case CMD_AUG_VIT:
             robot_set_speed_pct(robot_get_speed_pct()+10);
