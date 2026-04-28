@@ -22,10 +22,23 @@ bool obstacle;
  */
 static char keyboard_config[CMD_NB];
 
+/**
+ * @brief Convertit un caractère en commande.
+ *
+ * Compare la touche à chaque élément de `keyboard_config` pour déterminer
+ * la commande correspondante.
+ *
+ * @param ascii Caractère lu (par exemple 'z', 'q', etc.)
+ * @return Commande correspondante ou `CMD_NONE` si non reconnue.
+ */
 static command_t ascii_to_command(int ascii);
 
 
-
+/**
+ * @brief Initialise le module de lecture de commandes.
+ *
+ * Configure les touches par défaut ou permet à l'utilisateur de les personnaliser.
+ */
 void remote_init(){
     bool continuer = true;
     char c;
@@ -65,6 +78,7 @@ void remote_init(){
     keyboard_config[4]=    'd';  //CMD_ROTATION_D
     keyboard_config[5]=    'r';  //CMD_AUG_VIT
     keyboard_config[6]=    'f';  //CMD_RED_VIT
+    printf("Touches par defaut :\nAvancer : z\nStop/Reculer : s\nTourner a gauche : q\nTourner a droite : d\nAugmenter la vitesse : r\nReduire la vitesse : f\n");
     }
 }
 
