@@ -16,7 +16,20 @@ typedef enum {
     DIR_DROITE
 }direction_t;
 
-int robot_init();
+typedef struct{
+    int left;
+    int right;
+} encoder_t;
+
+typedef struct{
+    int left;
+    int center_left;
+    int front;
+    int center_right;
+    int right;
+} proximity_t;
+
+void robot_init();
 void robot_start_forward();
 void robot_stop();
 void robot_turn(direction_t direction);
