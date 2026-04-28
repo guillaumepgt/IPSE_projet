@@ -1,10 +1,3 @@
-/**
- * @file main.c
- * @brief Programme principal du robot
- *
- * Ce programme lit en boucle une commande clavier et traite la commande.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -13,16 +6,34 @@
 #include "move.h"
 #include "copilot.h"
 
-/**
- * @brief Point d'entrée principal du programme.
- *
- * @return Toujours 0 (succès).
- */
-int main()
-{
-    pilot_init();
-    move_t move={MOVE_FORWARD,100};
-    pilot_start_move(move);
-    while(!pilot_stop_at_target()) usleep(100);
-}
+#ifdef INTOX
+char * intox_address = "127.0.0.1";
+int intox_port = 12301;
+#endif
 
+int main(int argc, char *argv[])
+{
+    if (argc > 1) {
+#ifdef INTOX
+        intox_port = atoi(argv[1]);
+#endif
+    }
+
+    pilot_init();
+
+    move_t move={MOVE_FORWARD, 100};
+
+    while(access("go.txt", F_OK) != 0) {
+        usleep(50000);
+    }
+    printf("Signal reçu, c'est parti !\n");
+
+    pilot_start_move(move);
+
+    while(!pilot_stop_at_target()) {
+        usleep(50000);
+    }
+
+    while(1) { usleep(100000); }
+    return 0;
+}

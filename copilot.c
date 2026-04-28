@@ -7,7 +7,7 @@ static int nb_move;
 static move_t* moves;
 
 
-int init(char* name_file){  //FAIRE RESTE DU .C (F SUR LE TD) 
+int init(char* name_file){
     FILE *file =fopen(FILENAME, "r");
     if(file==NULL){
         perror("Erreur ouverture fichier");
