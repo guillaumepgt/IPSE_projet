@@ -3,7 +3,7 @@
 
 #include "move.h"
 
-int init(char* name_file);
+
 int move_provider_update_next_move(move_t* move);
 
 void move_provider_update_nb_move(int* nb);
