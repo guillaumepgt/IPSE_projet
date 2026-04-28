@@ -1,0 +1,10 @@
+*.wbproj
+*.tvs
+*.wbt
+*.py
+.idea/
+.DS_Store
+./go
+go.txt
+./run.sh
+*.o
