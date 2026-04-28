@@ -12,7 +12,7 @@ static int speed_pct = 100;
 
 void robot_init(void)
 {
-//Initialisation du robot et vérification du bon démarrage
+
     if (mrpiz_init() == -1) {
         mrpiz_error_print("Problème d'initialisation avec le simulateur");
     }

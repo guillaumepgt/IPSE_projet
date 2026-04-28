@@ -6,14 +6,18 @@ rm -f go.txt
 sleep 0.5
 
 ROBOTS=(
-    "MRPiZ_yellow"
-    "MRPiZ_orange"
-    "MRPiZ_red"
-    "MRPiZ_purple"
-    "MRPiZ_pink"
-    "MRPiZ_white"
-    "MRPiZ_black"
-    "MRPiZ_blue"
+    "MRPiZ yellow"
+    "MRPiZ orange"
+    "MRPiZ red"
+    "MRPiZ purple"
+    "MRPiZ magenta"
+    "MRPiZ pink"
+    "MRPiZ green"
+    "MRPiZ sky-blue"
+    "MRPiZ blue"
+    "MRPiZ black"
+    "MRPiZ grey"
+    "MRPiZ white"
 )
 
 PORT_BASE=12301
