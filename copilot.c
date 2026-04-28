@@ -2,34 +2,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define FILENAME "chemin.tsv"
-static int nb_move;
-static move_t* moves;
 
+static move_t *mouvements = NULL;
+static int total_mouvements = 0;
 
-int init(char* name_file){
-    FILE *file =fopen(FILENAME, "r");
-    if(file==NULL){
-        perror("Erreur ouverture fichier");
-        return -1;
-    }   
-
-    if(fscanf(file,"%d\n",&nb_move)!=1){
-        printf("erreur lecture nb_move");
+extern int copilot_init(const char* name_file) {
+    FILE *fichier = fopen(name_file, "r");
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s\n", name_file);
         return -1;
     }
 
-    moves = calloc(nb_move,sizeof(move_t));
-    if(moves==NULL){
-        printf("Erreur allocation memoire");
+    if (fscanf(fichier, "%d", &total_mouvements) != 1) {
+        printf("Erreur de lecture du nombre de mouvements\n");
+        fclose(fichier);
         return -1;
     }
-    char line[100];
-    int new_move_amplitude;
-    for(int i=0; fscanf(file,"%s\t%d",line,&new_move_amplitude); i++){
-        moves[i].magnitude=new_move_amplitude;
-        if (strcmp(line,"forward")) moves[i].type=MOVE_FORWARD;
-        if (strcmp(line,"turn")) moves[i].type=MOVE_TURN;
+
+    mouvements = calloc(total_mouvements, sizeof(move_t));
+    if (mouvements == NULL) {
+        printf("Erreur d'allocation memoire\n");
+        fclose(fichier);
+        return -1;
     }
 
+    char direction[50];
+    int valeur;
+    for (int i = 0; i < total_mouvements; i++) {
+        if (fscanf(fichier, "%s %d", direction, &valeur) == 2) {
+
+            if (strstr(direction, "forward") != NULL) {
+                mouvements[i].type = MOVE_FORWARD;
+            } else if (strstr(direction, "turn") != NULL) {
+                mouvements[i].type = MOVE_TURN;
+            }
+            mouvements[i].magnitude = valeur;
+        }
+    }
+
+    fclose(fichier);
+    return 1;
+}
+
+void move_provider_update_nb_move(int* nb) {
+    if (nb != NULL) {
+        *nb = total_mouvements;
+    }
+}
+
+void move_provider_update_all_moves(move_t* tab_move) {
+    if (tab_move != NULL && mouvements != NULL) {
+        for (int i = 0; i < total_mouvements; i++) {
+            tab_move[i] = mouvements[i];
+        }
+        free(mouvements);
+        mouvements = NULL;
+    }
 }

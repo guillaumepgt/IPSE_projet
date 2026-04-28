@@ -8,7 +8,7 @@ typedef enum  {
 
 typedef struct {
     move_type_t type;
-    int magnitude; //cm ou degre(0 à 360) 
+    int magnitude;
 }move_t;
 
 #endif

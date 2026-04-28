@@ -19,11 +19,11 @@ LDFLAGS += -L$(LIB_MRPIZ)/lib/ -lintoxmrpiz -lintox -lm
 all: $(TARGET)
 
 # Construction de l'exécutable à partir des fichiers objets
-$(TARGET): main.o robot.o pilot.o autopilot.o
-	$(CC) main.o robot.o pilot.o autopilot.o $(LDFLAGS)  -o $(TARGET)
+$(TARGET): main.o robot.o pilot.o autopilot.o copilot.o
+	$(CC) main.o robot.o pilot.o autopilot.o copilot.o $(LDFLAGS)  -o $(TARGET)
 
 # Compilation de main.c
-main.o: main.c autopilot.h
+main.o: main.c autopilot.h copilot.h pilot.h move.h
 	$(CC) $(CCFLAGS) -c main.c -o main.o
 
 # Compilation de robot.c
@@ -38,6 +38,10 @@ pilot.o: pilot.c pilot.h robot.h move.h
 autopilot.o: autopilot.c autopilot.h pilot.h robot.h move.h
 	$(CC) $(CCFLAGS) -c autopilot.c -o autopilot.o
 
+# Compilation de copilot.o
+copilot.o: copilot.c copilot.h move.h
+	$(CC) $(CCFLAGS) -c copilot.c -o copilot.o
+
 # Nettoyage
 clean:
-	rm -f $(TARGET) main.o robot.o pilot.o autopilot.o
+	rm -f $(TARGET) main.o robot.o pilot.o autopilot.o copilot.o
