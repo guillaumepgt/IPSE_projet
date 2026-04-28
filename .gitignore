@@ -4,5 +4,6 @@
 *.py
 .idea/
 .DS_Store
-go
+./go
 go.txt
+./run.sh

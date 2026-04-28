@@ -1,10 +1,14 @@
+/**
+ * @file main.c
+ * @brief Programme principal du robot
+ *
+ * Ce programme lit en boucle une commande clavier et traite la commande.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <unistd.h>
-#include "pilot.h"
-#include "move.h"
-#include "copilot.h"
+#include "autopilot.h"
 
 #ifdef INTOX
 char * intox_address = "127.0.0.1";
@@ -19,21 +23,12 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    pilot_init();
-
-    move_t move={MOVE_FORWARD, 100};
+    autopilot_init();
 
     while(access("go.txt", F_OK) != 0) {
         usleep(50000);
     }
-    printf("Signal reçu, c'est parti !\n");
 
-    pilot_start_move(move);
-
-    while(!pilot_stop_at_target()) {
-        usleep(50000);
-    }
-
-    while(1) { usleep(100000); }
-    return 0;
+    autopilot_run();
 }
+
