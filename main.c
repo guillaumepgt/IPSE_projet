@@ -18,7 +18,10 @@ int intox_port = 12301;
 
 int main(int argc, char *argv[])
 {
+    input_detector_init();
+    input_detector_run();
 
+/*
     if (argc > 1) {
 #ifdef INTOX
         intox_port = atoi(argv[1]);
@@ -32,5 +35,6 @@ int main(int argc, char *argv[])
     }
 
     autopilot_run();
+    */
 }
 

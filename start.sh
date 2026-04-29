@@ -18,7 +18,7 @@ for i in "${!ROBOTS[@]}"
 do
     PORT=$((PORT_BASE + i))
 
-    ./go $PORT &
+    ./go $PORT
 done
 
 sleep 0.5
