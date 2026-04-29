@@ -9,6 +9,7 @@ extern int intox_port;
 #endif
 
 static int speed_pct = 100;
+static int moving; //boolean
 
 void robot_init(void)
 {
@@ -16,16 +17,19 @@ void robot_init(void)
     if (mrpiz_init() == -1) {
         mrpiz_error_print("Problème d'initialisation avec le simulateur");
     }
+    moving=0;
 }
 
 void robot_start_forward(void)
 {
     mrpiz_motor_set(MRPIZ_MOTOR_BOTH, speed_pct);
+    moving=1;
 }
 
 void robot_stop(void)
 {
     mrpiz_motor_set(MRPIZ_MOTOR_BOTH, 0);
+    moving=0;
 }
 
 void robot_turn(direction_t dir)
@@ -42,6 +46,8 @@ void robot_turn(direction_t dir)
         mrpiz_motor_set(MRPIZ_MOTOR_RIGHT, speed_pct);
         break;
     }
+    //mrpiz_motor_set(MRPIZ_MOTOR_BOTH,0);
+    if(moving) robot_start_forward();
 }
 
 encoder_t robot_get_encoder(void)
@@ -73,3 +79,23 @@ proximity_t robot_get_proximity(void)
 
     return p;
 }
+
+bool robot_obstacle_detected(){
+  int distance;
+  distance = mrpiz_proxy_sensor_get(MRPIZ_PROXY_SENSOR_FRONT_CENTER);
+  //printf("distance :  %d        \r",distance);
+  return (distance<100);
+}
+
+void robot_set_speed_pct(int pct){
+  int new_pct=pct;
+  if(pct<10) new_pct=10;
+  else if(pct>100) new_pct=100;
+  speed_pct=new_pct;
+  if(moving) robot_start_forward();
+}
+
+int robot_get_speed_pct(){
+  return speed_pct;
+}
+
