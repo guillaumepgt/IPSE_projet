@@ -21,20 +21,21 @@ int intox_port = 12301;
 
 int main(int argc, char *argv[])
 {
-    if (argc > 1) {
-#ifdef INTOX
-        intox_port = atoi(argv[1]);
-#endif
-    }
-
-    input_detector_init();
     // autopilot_init();
     // pilot_init();
     // copilot_init("e3e_mission_2.tsv");
 
-    while(access("go.txt", F_OK) != 0) {
-        usleep(50000);
+    if (argc > 1) {
+        #ifdef INTOX
+                intox_port = atoi(argv[1]);
+        #endif
     }
+    input_detector_init();
+
+
+    // while(access("go.txt", F_OK) != 0) {
+    //     usleep(50000);
+    // }
 
     input_detector_run();
     // autopilot_run();
