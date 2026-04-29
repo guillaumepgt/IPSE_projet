@@ -27,14 +27,16 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    autopilot_init();
-    pilot_init();
-    copilot_init("e3e_mission_2.tsv");
+    input_detector_init();
+    // autopilot_init();
+    // pilot_init();
+    // copilot_init("e3e_mission_2.tsv");
 
     while(access("go.txt", F_OK) != 0) {
         usleep(50000);
     }
 
+    input_detector_run();
     // autopilot_run();
 
     // int nb_mouvements = 0;

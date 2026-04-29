@@ -1,22 +1,11 @@
 #!/bin/bash
 
 pkill -9 -f intox_mrpiz
-pkill -9 -f "go_"
+pkill -9 -f "go"
 rm -f go.txt
 
 ROBOTS=(
     "MRPiZ yellow"
-    "MRPiZ orange"
-    "MRPiZ red"
-    "MRPiZ purple"
-    "MRPiZ magenta"
-    "MRPiZ pink"
-    "MRPiZ green"
-    "MRPiZ sky-blue"
-    "MRPiZ blue"
-    "MRPiZ black"
-    "MRPiZ grey"
-    "MRPiZ white"
 )
 
 PORT_BASE=12301
@@ -33,9 +22,7 @@ do
 
     sleep 0.05
 
-    ./go $PORT &
+    ./go $PORT
 done
 
 touch go.txt
-
-wait

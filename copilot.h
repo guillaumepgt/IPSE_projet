@@ -3,6 +3,7 @@
 
 #include "move.h"
 
+int copilot_init(const char* name_file);
 
 int move_provider_update_next_move(move_t* move);
 
