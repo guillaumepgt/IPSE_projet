@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "autopilot.h"
 #include "copilot.h"
@@ -21,46 +22,58 @@ int intox_port = 12301;
 
 int main(int argc, char *argv[])
 {
-    // autopilot_init();
-    // pilot_init();
-    // copilot_init("e3e_mission_2.tsv");
+    char* mode = "auto";
 
     if (argc > 1) {
         #ifdef INTOX
                 intox_port = atoi(argv[1]);
         #endif
     }
-    input_detector_init();
+
+    if (argc > 2) {
+        mode = argv[2];
+    }
+
+    if (strcmp(mode, "auto") == 0) {
+        autopilot_init();
+    }
+    else if (strcmp(mode, "file") == 0) {
+        pilot_init();
+        copilot_init("e3e_mission_2.tsv");
+    }
+    else if (strcmp(mode, "manual") == 0) {
+        input_detector_init();
+    }
 
 
-    // while(access("go.txt", F_OK) != 0) {
-    //     usleep(50000);
-    // }
+    while(access("go.txt", F_OK) != 0) {
+        usleep(50000);
+    }
 
-    input_detector_run();
-    // autopilot_run();
+    if (strcmp(mode, "auto") == 0) {
+        autopilot_run();
+    }
+    else if (strcmp(mode, "file") == 0) {
+        int nb_mouvements = 0;
+        move_provider_update_nb_move(&nb_mouvements);
 
-    // int nb_mouvements = 0;
-    // move_provider_update_nb_move(&nb_mouvements);
-    //
-    // if (nb_mouvements > 0) {
-    //     move_t *mon_chemin = malloc(nb_mouvements * sizeof(move_t));
-    //     if (mon_chemin != NULL) {
-    //         move_provider_update_all_moves(mon_chemin);
-    //
-    //         for (int i = 0; i < nb_mouvements; i++) {
-    //             pilot_start_move(mon_chemin[i]);
-    //
-    //             while (!pilot_stop_at_target()) {
-    //                 usleep(10000);
-    //             }
-    //         }
-    //         free(mon_chemin);
-    //     }
-    // }
-    // robot_stop();
-    // while (1) {
-    //     usleep(100000);
-    // }
+        if (nb_mouvements > 0) {
+            move_t *mon_chemin = malloc(nb_mouvements * sizeof(move_t));
+            if (mon_chemin != NULL) {
+                move_provider_update_all_moves(mon_chemin);
+
+                for (int i = 0; i < nb_mouvements; i++) {
+                    pilot_start_move(mon_chemin[i]);
+
+                    while (!pilot_stop_at_target()) {
+                        usleep(10000);
+                    }
+                }
+                free(mon_chemin);
+            }
+        }
+    } else if (strcmp(mode, "manual") == 0) {
+        input_detector_run();
+    }
 }
 

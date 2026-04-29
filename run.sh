@@ -4,8 +4,25 @@ pkill -9 -f intox_mrpiz
 pkill -9 -f "go"
 rm -f go.txt
 
-ROBOTS=(
+ROBOTSAuto=(
     "MRPiZ yellow"
+    "MRPiZ orange"
+    "MRPiZ red"
+    "MRPiZ purple"
+    "MRPiZ magenta"
+    "MRPiZ pink"
+)
+
+ROBOTSFile=(
+    "MRPiZ green"
+    "MRPiZ sky-blue"
+    "MRPiZ blue"
+    "MRPiZ black"
+    "MRPiZ grey"
+)
+
+ROBOTSManuel=(
+    "MRPiZ white"
 )
 
 PORT_BASE=12301
@@ -26,3 +43,5 @@ do
 done
 
 touch go.txt
+
+await
