@@ -6,17 +6,6 @@ rm -f go.txt
 
 ROBOTS=(
     "MRPiZ yellow"
-    "MRPiZ orange"
-    "MRPiZ red"
-    "MRPiZ purple"
-    "MRPiZ magenta"
-    "MRPiZ pink"
-    "MRPiZ green"
-    "MRPiZ sky-blue"
-    "MRPiZ blue"
-    "MRPiZ black"
-    "MRPiZ grey"
-    "MRPiZ white"
 )
 
 PORT_BASE=12301
@@ -33,7 +22,7 @@ do
 
     sleep 0.05
 
-    ./go $PORT &
+    ./go $PORT
 done
 
 touch go.txt
