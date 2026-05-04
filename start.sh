@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pkill -9 -f intox_mrpiz
+echo "=== Nettoyage ==="
 pkill -9 -f "go"
 rm -f go.txt
 
@@ -19,39 +19,30 @@ if [ ! -f "go" ]; then
     exit 1
 fi
 
-lancer_robot() {
-    local nom_robot="$1"
-    local mode="$2"
-    local port_robot=$3
-    local arriere_plan=$4
+echo "=== LANCEMENT DES IA (Webots gère déjà le réseau) ==="
 
-    env WEBOTS_ROBOT_NAME="$nom_robot" WEBOTS_CONTROLLER_NAME="$nom_robot" WEBOTS_CONTROLLER_URL="tcp://127.0.0.1:1234/$nom_robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $port_robot &
-
-    sleep 0.1
-
-    if [ "$arriere_plan" == "true" ]; then
-        ./go $port_robot $mode &
-    else
-        ./go $port_robot $mode
-    fi
-}
-
+# 1. On connecte les 6 robots AUTO
 for robot in "${ROBOTSAuto[@]}"; do
-    lancer_robot "$robot" "auto" $PORT "true"
+    echo "Connexion de $robot au port $PORT (AUTO)"
+    ./go $PORT auto &
     PORT=$((PORT + 1))
 done
 
+# 2. On connecte les 5 robots FILE
 for robot in "${ROBOTSFile[@]}"; do
-    lancer_robot "$robot" "file" $PORT "true"
+    echo "Connexion de $robot au port $PORT (FILE)"
+    ./go $PORT file &
     PORT=$((PORT + 1))
 done
 
 sleep 0.5
-
 touch go.txt
+echo "GOOOOO !!!"
 
+# 3. On connecte le robot MANUEL (au premier plan pour garder le clavier)
 for robot in "${ROBOTSManuel[@]}"; do
-    lancer_robot "$robot" "manual" $PORT "false"
+    echo ">>> VOUS AVEZ LES COMMANDES SUR '$robot' (Port $PORT) <<<"
+    ./go $PORT manual
     PORT=$((PORT + 1))
 done
 
