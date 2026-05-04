@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ADRESSE_WEBOTS="host.docker.internal"
+
 pkill -9 -f "intox_mrpiz"
 pkill -9 -f "go"
 rm -f go.txt
@@ -14,7 +16,7 @@ make clean
 make
 
 if [ ! -f "go" ]; then
-    echo "Erreur de compilation. Arrêt."
+    echo "Erreur : La compilation a échoué. Arrêt du script."
     exit 1
 fi
 
@@ -24,7 +26,7 @@ lancer_robot() {
     local port_robot=$3
     local arriere_plan=$4
 
-    env WEBOTS_ROBOT_NAME="$nom_robot" WEBOTS_CONTROLLER_NAME="$nom_robot" WEBOTS_CONTROLLER_URL="tcp://host.docker.internal:1234/$nom_robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $port_robot &
+    env WEBOTS_ROBOT_NAME="$nom_robot" WEBOTS_CONTROLLER_NAME="$nom_robot" WEBOTS_CONTROLLER_URL="tcp://${ADRESSE_WEBOTS}:1234/$nom_robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $port_robot &
 
     sleep 0.1
 
@@ -48,10 +50,8 @@ done
 sleep 0.5
 
 touch go.txt
-echo "GOOOOO !!!"
 
 for robot in "${ROBOTSManuel[@]}"; do
-    echo ">>> VOUS AVEZ LES COMMANDES SUR '$robot' <<<"
     lancer_robot "$robot" "manual" $PORT "false"
     PORT=$((PORT + 1))
 done
