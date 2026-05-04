@@ -1,3 +1,15 @@
+/**
+ * @file autopilot.c
+ * @brief Implémentation de l'autopilot.
+ * @author Basile Morin
+ *
+ * Ce fichier contient les fonctions nécessaires à l'utilisation de l'autopilot.
+ * 
+ * L'autopilot est un module de pilotage autonome du robot. Il lit en continu
+ * les capteurs de proximité du robot et décide automatiquement d'avancer, de
+ * tourner à gauche ou de tourner à droite selon les obstacles détectés.
+ */
+
 #include "autopilot.h"
 #include "robot.h"
 #include "pilot.h"
