@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "=== Nettoyage ==="
 pkill -9 -f "intox_mrpiz"
 pkill -9 -f "go"
 rm -f go.txt
@@ -19,27 +18,41 @@ if [ ! -f "go" ]; then
     exit 1
 fi
 
-for robot in "${ROBOTSAuto[@]}"; do
-    env WEBOTS_ROBOT_NAME="$robot" WEBOTS_CONTROLLER_NAME="$robot" WEBOTS_CONTROLLER_URL="tcp://host.docker.internal:1234/$robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $PORT &
+lancer_robot() {
+    local nom_robot="$1"
+    local mode="$2"
+    local port_robot=$3
+    local arriere_plan=$4
+
+    env WEBOTS_ROBOT_NAME="$nom_robot" WEBOTS_CONTROLLER_NAME="$nom_robot" WEBOTS_CONTROLLER_URL="tcp://host.docker.internal:1234/$nom_robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $port_robot &
+
     sleep 0.1
-    ./go $PORT auto &
+
+    if [ "$arriere_plan" == "true" ]; then
+        ./go $port_robot $mode &
+    else
+        ./go $port_robot $mode
+    fi
+}
+
+for robot in "${ROBOTSAuto[@]}"; do
+    lancer_robot "$robot" "auto" $PORT "true"
     PORT=$((PORT + 1))
 done
 
 for robot in "${ROBOTSFile[@]}"; do
-    env WEBOTS_ROBOT_NAME="$robot" WEBOTS_CONTROLLER_NAME="$robot" WEBOTS_CONTROLLER_URL="tcp://host.docker.internal:1234/$robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $PORT &
-    sleep 0.1
-    ./go $PORT file &
+    lancer_robot "$robot" "file" $PORT "true"
     PORT=$((PORT + 1))
 done
 
 sleep 0.5
+
 touch go.txt
+echo "GOOOOO !!!"
 
 for robot in "${ROBOTSManuel[@]}"; do
-    env WEBOTS_ROBOT_NAME="$robot" WEBOTS_CONTROLLER_NAME="$robot" WEBOTS_CONTROLLER_URL="tcp://host.docker.internal:1234/$robot" ../webots_mrpiz_v0.6.1/controllers/intox_mrpiz-x86_64-linux-gnu/intox_mrpiz-x86_64-linux-gnu $PORT &
-    sleep 0.1
-    ./go $PORT manual
+    echo ">>> VOUS AVEZ LES COMMANDES SUR '$robot' <<<"
+    lancer_robot "$robot" "manual" $PORT "false"
     PORT=$((PORT + 1))
 done
 

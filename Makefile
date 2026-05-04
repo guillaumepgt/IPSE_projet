@@ -1,59 +1,59 @@
-# Nom de l'exécutable
 TARGET = go
 
-# Compilateur utilisé
+BUILD_DIR = build
+SRC_DIR = src
+
 CC = gcc
 
-# Options de compilation
-CCFLAGS += -g -Wall -Wextra -I. -Iterminal
+CCFLAGS += -g -Wall -Wextra -I. -I$(SRC_DIR) -I$(SRC_DIR)/terminal
 
-# Répertoire d'installation de la bibliothèque MRPiZ
 LIB_MRPIZ = $(realpath $(wildcard ../lib_mrpiz*/))
 
-# Options de compilation pour l'utilisation de la bibliothèque MRPiZ
 export CCFLAGS  += -DINTOX
 CCFLAGS += -I$(LIB_MRPIZ)/include/mrpiz/
 LDFLAGS += -L$(LIB_MRPIZ)/lib/ -lintoxmrpiz -lintox -lm
 
-# Règle par défaut
+OBJS = $(BUILD_DIR)/main.o \
+       $(BUILD_DIR)/remote.o \
+       $(BUILD_DIR)/robot.o \
+       $(BUILD_DIR)/pilot.o \
+       $(BUILD_DIR)/autopilot.o \
+       $(BUILD_DIR)/input_detector.o \
+       $(BUILD_DIR)/terminal.o \
+       $(BUILD_DIR)/copilot.o
+
 all: $(TARGET)
 
-# Construction de l'exécutable à partir des fichiers objets
-$(TARGET): main.o remote.o robot.o pilot.o autopilot.o input_detector.o terminal/terminal.o copilot.o
-	$(CC) main.o remote.o robot.o pilot.o autopilot.o input_detector.o terminal/terminal.o copilot.o $(LDFLAGS) -o $(TARGET)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-# Compilation de main.c en main.o
-main.o: main.c input_detector.h autopilot.h copilot.h pilot.h move.h
-	$(CC) $(CCFLAGS) -c main.c -o main.o
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
-# Compilation de input_detector.c en input_detector.o
-input_detector.o: input_detector.c input_detector.h robot.h remote.h
-	$(CC) $(CCFLAGS) -c input_detector.c -o input_detector.o
+$(BUILD_DIR)/main.o: $(SRC_DIR)/main.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/main.c -o $(BUILD_DIR)/main.o
 
-# Compilation de remote.c en remote.o
-remote.o: remote.c remote.h terminal/terminal.h
-	$(CC) $(CCFLAGS) -c remote.c -o remote.o
+$(BUILD_DIR)/input_detector.o: $(SRC_DIR)/input_detector.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/input_detector.c -o $(BUILD_DIR)/input_detector.o
 
-# Compilation de robot.c en robot.o
-robot.o: robot.c robot.h remote.h
-	$(CC) $(CCFLAGS) -c robot.c -o robot.o
+$(BUILD_DIR)/remote.o: $(SRC_DIR)/remote.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/remote.c -o $(BUILD_DIR)/remote.o
 
-# Compilation de terminal.c en terminal.o
-terminal.o: terminal/terminal.c terminal/terminal.h
-	$(CC) $(CCFLAGS) -c terminal/terminal.c -o terminal/terminal.o
+$(BUILD_DIR)/robot.o: $(SRC_DIR)/robot.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/robot.c -o $(BUILD_DIR)/robot.o
 
-# Compilation de autopilot.c
-autopilot.o: autopilot.c autopilot.h pilot.h robot.h move.h
-	$(CC) $(CCFLAGS) -c autopilot.c -o autopilot.o
+# Attention au sous-dossier terminal
+$(BUILD_DIR)/terminal.o: $(SRC_DIR)/terminal/terminal.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/terminal/terminal.c -o $(BUILD_DIR)/terminal.o
 
-# Compilation de copilot.o
-copilot.o: copilot.c copilot.h move.h
-	$(CC) $(CCFLAGS) -c copilot.c -o copilot.o
+$(BUILD_DIR)/autopilot.o: $(SRC_DIR)/autopilot.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/autopilot.c -o $(BUILD_DIR)/autopilot.o
 
-# Nettoyage
-pilot.o: pilot.c pilot.h robot.h move.h
-	$(CC) $(CCFLAGS) -c pilot.c -o pilot.o
+$(BUILD_DIR)/copilot.o: $(SRC_DIR)/copilot.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/copilot.c -o $(BUILD_DIR)/copilot.o
 
-# Nettoyage des fichiers générés
+$(BUILD_DIR)/pilot.o: $(SRC_DIR)/pilot.c | $(BUILD_DIR)
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/pilot.c -o $(BUILD_DIR)/pilot.o
+
 clean:
-	rm -f $(TARGET) main.o remote.o robot.o pilot.o autopilot.o input_detector.o terminal/terminal.o copilot.o
+	rm -rf $(BUILD_DIR) $(TARGET)
