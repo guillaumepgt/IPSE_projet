@@ -8,28 +8,86 @@
 #include <stdlib.h>
 #include <time.h>
 
+/**
+ * @brief Seuil minimal pour considérer que l'avant du robot est dégagé.
+ */
 #define FRONT_THRESHOLD        120
+
+/**
+ * @brief Seuil minimal pour considérer que les capteurs avant-gauche
+ * et avant-droite ne détectent pas d'obstacle proche.
+ */
 #define NEAR_SIDE_THRESHOLD    100
+
+/**
+ * @brief Seuil minimal pour considérer qu'un côté du robot est ouvert.
+ */
 #define SIDE_OPEN_THRESHOLD    100
+
+/**
+ * @brief Angle élémentaire de rotation utilisé par l'autopilot.
+ */
 #define TURN_STEP              5
+
+/**
+ * @brief Distance élémentaire d'avancement utilisée par l'autopilot.
+ */
 #define FORWARD_STEP           5
 
 
+/**
+ * @brief Vérifie si l'avant du robot est dégagé.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si la distance mesurée à l'avant est supérieure ou égale
+ * au seuil défini, false sinon.
+ */
 static bool isFrontClear(proximity_t proximityValues)
 {
     return proximityValues.front >= FRONT_THRESHOLD;
 }
 
+/**
+ * @brief Vérifie si la zone avant-gauche proche du robot est dégagée.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si la zone avant-gauche est considérée comme libre,
+ * false sinon.
+ */
 static bool isNearLeftClear(proximity_t proximityValues)
 {
     return proximityValues.center_left >= NEAR_SIDE_THRESHOLD;
 }
 
+/**
+ * @brief Vérifie si la zone avant-droite proche du robot est dégagée.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si la zone avant-droite est considérée comme libre,
+ * false sinon.
+ */
 static bool isNearRightClear(proximity_t proximityValues)
 {
     return proximityValues.center_right >= NEAR_SIDE_THRESHOLD;
 }
 
+/**
+ * @brief Détermine si le robot peut avancer.
+ *
+ * Le robot peut avancer seulement si l'avant, l'avant-gauche et
+ * l'avant-droite sont dégagés.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si le robot peut avancer, false sinon.
+ */
 static bool canGoForward(proximity_t proximityValues)
 {
 
@@ -38,16 +96,42 @@ static bool canGoForward(proximity_t proximityValues)
         && isNearRightClear(proximityValues);
 }
 
+/**
+ * @brief Vérifie si le côté gauche du robot est ouvert.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si le côté gauche est considéré comme ouvert,
+ * false sinon.
+ */
 static bool isLeftOpen(proximity_t proximityValues)
 {
     return proximityValues.left >= SIDE_OPEN_THRESHOLD;
 }
 
+/**
+ * @brief Vérifie si le côté droit du robot est ouvert.
+ *
+ * @param proximityValues Structure contenant les valeurs des capteurs
+ * de proximité du robot.
+ *
+ * @return true si le côté droit est considéré comme ouvert,
+ * false sinon.
+ */
 static bool isRightOpen(proximity_t proximityValues)
 {
     return proximityValues.right >= SIDE_OPEN_THRESHOLD;
 }
 
+/**
+ * @brief Fait avancer le robot d'une distance donnée.
+ *
+ * Crée un mouvement de type MOVE_FORWARD, lance ce mouvement via le module
+ * pilot, puis attend que la distance cible soit atteinte.
+ *
+ * @param cm Distance d'avancement en centimètres.
+ */
 static void doForwardStep(int cm)
 {
     move_t m;
@@ -60,6 +144,15 @@ static void doForwardStep(int cm)
     }
 }
 
+/**
+ * @brief Fait tourner le robot vers la gauche.
+ *
+ * Crée un mouvement de type MOVE_TURN avec une magnitude négative afin
+ * d'indiquer une rotation vers la gauche, puis attend que la rotation soit
+ * terminée.
+ *
+ * @param mag Amplitude de la rotation.
+ */
 static void doLeftTurn(int mag)
 {
     move_t m;
@@ -72,6 +165,15 @@ static void doLeftTurn(int mag)
     }
 }
 
+/**
+ * @brief Fait tourner le robot vers la droite.
+ *
+ * Crée un mouvement de type MOVE_TURN avec une magnitude positive afin
+ * d'indiquer une rotation vers la droite, puis attend que la rotation soit
+ * terminée.
+ *
+ * @param mag Amplitude de la rotation.
+ */
 static void doRightTurn(int mag)
 {
     move_t m;
@@ -85,12 +187,31 @@ static void doRightTurn(int mag)
 }
 
 
+/**
+ * @brief Initialise le pilotage automatique.
+ *
+ * Initialise le module pilot, puis initialise le générateur de nombres
+ * aléatoires utilisé lorsque plusieurs choix de direction sont possibles.
+ */
 void autopilot_init(void)
 {
     pilot_init();
     srand(time(NULL));
 }
 
+/**
+ * @brief Exécute la boucle principale de l'autopilot.
+ *
+ * À chaque itération, le robot récupère les valeurs de ses capteurs de
+ * proximité puis prend une décision :
+ * - avancer si la voie est libre ;
+ * - tourner à gauche si seul le côté gauche est ouvert ;
+ * - tourner à droite si seul le côté droit est ouvert ;
+ * - choisir aléatoirement une direction si les deux côtés sont ouverts ;
+ * - choisir aléatoirement une direction si le robot est bloqué.
+ *
+ * Cette fonction ne se termine jamais car elle contient une boucle infinie.
+ */
 void autopilot_run(void){
     while (1){
         
