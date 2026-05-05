@@ -49,8 +49,6 @@ done
 
 sleep 0.5
 
-touch go.txt
-
 for robot in "${ROBOTSManuel[@]}"; do
     lancer_robot "$robot" "manual" $PORT "false"
     PORT=$((PORT + 1))

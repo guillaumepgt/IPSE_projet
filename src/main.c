@@ -39,21 +39,22 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "file") == 0) {
         pilot_init();
-        copilot_init("e3e_mission_2.tsv");
+        copilot_init("circuit1.tsv");
     }
     else if (strcmp(mode, "manual") == 0) {
         input_detector_init();
     }
 
-
-    while(access("go.txt", F_OK) != 0) {
-        usleep(50000);
-    }
-
     if (strcmp(mode, "auto") == 0) {
+        while(access("go.txt", F_OK) != 0) {
+            usleep(50000);
+        }
         autopilot_run();
     }
     else if (strcmp(mode, "file") == 0) {
+        while(access("go.txt", F_OK) != 0) {
+            usleep(50000);
+        }
         int nb_mouvements = 0;
         move_provider_update_nb_move(&nb_mouvements);
 
@@ -73,6 +74,16 @@ int main(int argc, char *argv[])
             }
         }
     } else if (strcmp(mode, "manual") == 0) {
+        char *start[] = {"3...", "2...", "1...", "GO !!!"};
+        for (int i = 0; i < 4; i++) {
+            printf("%s\n", start[i]);
+            fflush(stdout);
+            usleep(1000000);
+        }
+        FILE *fichier = fopen("go.txt", "w");
+        if (fichier != NULL) {
+            fclose(fichier);
+        }
         input_detector_run();
     }
 }

@@ -1,6 +1,5 @@
 *.wbproj
 *.tvs
-*.wbt
 *.py
 .idea/
 .DS_Store

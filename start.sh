@@ -30,7 +30,6 @@ for robot in "${ROBOTSFile[@]}"; do
 done
 
 sleep 0.5
-touch go.txt
 
 for robot in "${ROBOTSManuel[@]}"; do
     ./go $PORT manual

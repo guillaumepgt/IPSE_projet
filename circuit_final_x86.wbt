@@ -1,0 +1,301 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/cyberbotics/TexturedBackground.proto"
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/cyberbotics/TexturedBackgroundLight.proto"
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/cyberbotics/Floor.proto"
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/cyberbotics/RectangleArena.proto"
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/cyberbotics/objects/Ball.proto"
+EXTERNPROTO "../webots_mrpiz_v0.6.1/protos/mrpiz/MRPiZ.proto"
+
+WorldInfo {
+  info [
+    "Useful for playing with MRPiZ robots..."
+    ""
+    "MRPiZ yellow listen on port 12301"
+    "MRPiZ orange listen on port 12302"
+    "MRPiZ red listen on port 12303"
+    "MRPiZ purple listen on port 12304"
+    "MRPiZ magenta listen on port 12305"
+    "MRPiZ pink listen on port 12306"
+    "MRPiZ green listen on port 12307"
+    "MRPiZ sky-blue listen on port 12308"
+    "MRPiZ blue listen on port 12309"
+    "MRPiZ black listen on port 12310"
+    "MRPiZ grey listen on port 12311"
+    "MRPiZ white listen on port 12312"
+  ]
+  title "MRPiZ racing circuit"
+  contactProperties [
+    ContactProperties {
+      material1 "idle wheel material"
+      coulombFriction [
+        0.001
+      ]
+      bumpSound "../webots_mrpiz_v0.6.1/sounds/cyberbotics/bump.wav"
+    }
+    ContactProperties {
+      bumpSound "../webots_mrpiz_v0.6.1/sounds/cyberbotics/bump.wav"
+      rollSound "../webots_mrpiz_v0.6.1/sounds/cyberbotics/roll.wav"
+      slideSound "../webots_mrpiz_v0.6.1/sounds/cyberbotics/slide.wav"
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.27976865261541303 0.1706692994018789 0.944778170889218 1.9547847746594246
+  position 0.11657800096991195 -3.816089304386762 3.2504938637769935
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+
+# L'arène principale (agrandie pour faire de la place)
+RectangleArena {
+  translation 0 0 0
+  floorSize 3 3
+  floorAppearance PBRAppearance {
+    baseColor 0 0.4 0.15
+    roughness 1
+  }
+  wallAppearance PBRAppearance {
+    baseColor 0.8 0.8 0.8
+    transparency 0.8
+    roughness 1
+    metalness 0
+  }
+}
+
+# La barrière circulaire centrale (L'île du circuit)
+Solid {
+  translation 0 0 0.05
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.8 0.2 0.2
+        roughness 0.5
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+        radius 0.6
+      }
+    }
+  ]
+  name "central_barrier"
+  boundingObject Cylinder {
+    height 0.1
+    radius 0.6
+  }
+}
+
+Solid {
+  translation 0.15 -1.05 0.002  # Placée à X=0.15 (devant les robots) et Z=0.002 (pour ne pas clignoter avec le sol)
+  children [
+    # Bloc 1 (Blanc)
+    Transform {
+      translation 0 0.375 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 1 1 1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+    # Bloc 2 (Noir)
+    Transform {
+      translation 0 0.225 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.1 0.1 0.1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+    # Bloc 3 (Blanc)
+    Transform {
+      translation 0 0.075 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 1 1 1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+    # Bloc 4 (Noir)
+    Transform {
+      translation 0 -0.075 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.1 0.1 0.1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+    # Bloc 5 (Blanc)
+    Transform {
+      translation 0 -0.225 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 1 1 1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+    # Bloc 6 (Noir)
+    Transform {
+      translation 0 -0.375 0
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.1 0.1 0.1 roughness 0.8 metalness 0 }
+          geometry Box { size 0.1 0.15 0.001 }
+        }
+      ]
+    }
+  ]
+  name "ligne_depart"
+}
+
+
+# Rangée 1 (La ligne de tête)
+MRPiZ {
+  translation 0.0 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ yellow"
+  controllerArgs [ "12301" ]
+  synchronization FALSE
+  bodyColor 1 1 0
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 1 1 0
+}
+MRPiZ {
+  translation 0.0 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ orange"
+  controllerArgs [ "12302" ]
+  synchronization FALSE
+  bodyColor 1 0.5 0
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0.9 0.4 0
+  batteryColor 0.9 0.4 0
+}
+
+# Rangée 2
+MRPiZ {
+  translation -0.2 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ red"
+  controllerArgs [ "12303" ]
+  synchronization FALSE
+  bodyColor 1 0 0
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 1 0 0
+}
+MRPiZ {
+  translation -0.2 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ purple"
+  controllerArgs [ "12304" ]
+  synchronization FALSE
+  bodyColor 0.5 0 1
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0.5 0 1
+}
+
+# Rangée 3
+MRPiZ {
+  translation -0.4 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ magenta"
+  controllerArgs [ "12305" ]
+  synchronization FALSE
+  bodyColor 1 0 1
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 1 0 1
+}
+MRPiZ {
+  translation -0.4 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ pink"
+  controllerArgs [ "12306" ]
+  synchronization FALSE
+  bodyColor 1 0.6 0.8
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 1 0.6 0.8
+}
+
+# Rangée 4
+MRPiZ {
+  translation -0.6 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ green"
+  controllerArgs [ "12307" ]
+  synchronization FALSE
+  bodyColor 0 1 0
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0 1 0
+}
+MRPiZ {
+  translation -0.6 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ sky-blue"
+  controllerArgs [ "12308" ]
+  synchronization FALSE
+  bodyColor 0 1 1
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0 1 1
+}
+
+# Rangée 5
+MRPiZ {
+  translation -0.8 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ blue"
+  controllerArgs [ "12309" ]
+  synchronization FALSE
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0 0 1
+}
+MRPiZ {
+  translation -0.8 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ black"
+  controllerArgs [ "12310" ]
+  synchronization FALSE
+  bodyColor 0.1 0.1 0.1
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0.2 0.2 0.2
+}
+
+# Rangée 6
+MRPiZ {
+  translation -1.0 -0.8 0.05
+  rotation 0 0 1 0
+  name "MRPiZ grey"
+  controllerArgs [ "12311" ]
+  synchronization FALSE
+  bodyColor 0.5 0.5 0.5
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0.5 0.5 0.5
+}
+MRPiZ {
+  translation -1.0 -1.15 0.05
+  rotation 0 0 1 0
+  name "MRPiZ white"
+  controllerArgs [ "12312" ]
+  synchronization FALSE
+  bodyColor 0.8 0.8 0.8
+  bodyRoughness 1
+  bodyMetalness 0
+  rimColor 0.8 0.8 0.8
+}
