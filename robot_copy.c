@@ -2,14 +2,14 @@
 #include "mrpiz.h"
 #include <unistd.h>
 #include "pilot.h"
+#include <stdlib.h> // Pour abs()
+#include <math.h>   // Pour round()
 
 #include <stdbool.h>
 
 // PRIVATE VARIABLES ----------------------------------------------
 
 static int speed_pct = 60;
-
-static int cible_spin=360*2.53;
 
 // PUBLIC FUNCTIONS DEFINITIONS -----------------------------------
 
@@ -70,14 +70,19 @@ void robot_set_speed(int pourcentage){
 }
 
 
-void robot_spin(void){
-    int codeur_depart=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
-    int codeur_actuel=codeur_depart;
-    while(abs(codeur_actuel-codeur_depart)<cible_spin){
-        codeur_actuel=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
-        mrpiz_motor_set(MRPIZ_MOTOR_LEFT, speed_pct);
-        mrpiz_motor_set(MRPIZ_MOTOR_RIGHT, -speed_pct);
+int robot_spin(void){
+    int cible_spin = round(360 * 2.53);
+    int codeur_depart = mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
+    int codeur_actuel = codeur_depart;
+
+    mrpiz_motor_set(MRPIZ_MOTOR_LEFT, speed_pct);
+    mrpiz_motor_set(MRPIZ_MOTOR_RIGHT, -speed_pct);
+
+    while(abs(codeur_actuel - codeur_depart) < cible_spin){
+        codeur_actuel = mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
+        usleep(5000);
     }
+
     robot_stop();
-    encoder_target += (codeur_actuel-codeur_depart);
+    return (codeur_actuel - codeur_depart);
 }

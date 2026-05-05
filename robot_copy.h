@@ -27,6 +27,6 @@ extern void robot_reset_encoder();
 
 void robot_set_speed(int new_speed_pct);
 void robot_set_inversion(bool inverted);
-void robot_spin(void);
+int robot_spin(void);
 
 #endif  /* _ROBOT_H_ */

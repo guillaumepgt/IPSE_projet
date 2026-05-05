@@ -3,17 +3,11 @@
 
 #include "move.h"
 #include <stdbool.h>
-#include "robot_copy.h"
 
+void pilot_init(void);
+void pilot_start_move(move_t move);
+bool pilot_stop_at_target(void);
 
-
-extern int encoder_target;
-
-extern void pilot_init();
-extern void pilot_start_move(move_t move);
-extern bool pilot_stop_at_target();
-
-
-
+void pilot_offset_target(int offset);
 
 #endif
