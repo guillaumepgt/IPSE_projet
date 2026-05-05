@@ -13,7 +13,7 @@ static int luminosite_sol_normal = 0;
 static int seuil_diff_boost= 320;
 static int seuil_diff_toupie= 730;
 
-static int delai_attente_micros= 500000;
+static int delai_attente_micros= 50000;
 
 static bool sur_une_surprise=false;
 
