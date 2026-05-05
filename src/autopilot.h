@@ -11,6 +11,13 @@
 
 #define DEBUG 0
 
+/** @brief Indique si le robot doit tourner à gauche en cas de blocage. 
+ * Si défini à 1, le robot tournera systématiquement à gauche lorsqu'il est bloqué.
+ * Si défini à 0, le robot choisira aléatoirement de tourner à gauche ou à droite lorsqu'il est bloqué.
+ * Cette macro est utile dans le cas où le circuit tourne à gauche pour éviter que le robot ne fasse demi-tour.
+*/
+#define TURN_LEFT 1
+
 /**
  * @brief Initialise le module autopilot.
  *

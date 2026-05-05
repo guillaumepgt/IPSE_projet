@@ -247,7 +247,11 @@ void autopilot_run(void){
             #endif
 
             if (left_open && right_open) {
-                int choice = rand() % 2; //nombre au hasard entre 0 ou 1
+                #if TURN_LEFT
+                    int choice = 0; // Forcer à tourner à gauche en cas de blocage
+                #else
+                    int choice = rand() % 2; // Choix aléatoire en cas de blocage
+                #endif
 
                 #if DEBUG
                     printf("Decision: BOTH OPEN -> RANDOM\n");
@@ -273,7 +277,12 @@ void autopilot_run(void){
                 #endif
             }
             else {
-                int choice = rand() % 2;
+
+                #if TURN_LEFT
+                    int choice = 0; // Forcer à tourner à gauche en cas de blocage
+                #else
+                    int choice = rand() % 2; // Choix aléatoire en cas de blocage
+                #endif
 
                 #if DEBUG
                     printf("Decision: BLOCKED -> RANDOM TURN\n");
