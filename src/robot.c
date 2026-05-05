@@ -2,6 +2,7 @@
 #include "mrpiz.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef INTOX
 extern char * intox_address;
@@ -9,7 +10,8 @@ extern int intox_port;
 #endif
 
 static int speed_pct = 100;
-static int moving; //boolean
+static int moving;
+static int cible_spin=360*2.53;
 
 void robot_init(void)
 {
@@ -97,5 +99,16 @@ void robot_set_speed_pct(int pct){
 
 int robot_get_speed_pct(){
   return speed_pct;
+}
+
+void robot_spin(void){
+    int codeur_depart=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
+    int codeur_actuel=codeur_depart;
+    while(abs(codeur_actuel-codeur_depart)<cible_spin){
+        codeur_actuel=mrpiz_motor_encoder_get(MRPIZ_MOTOR_LEFT);
+        mrpiz_motor_set(MRPIZ_MOTOR_LEFT, speed_pct);
+        mrpiz_motor_set(MRPIZ_MOTOR_RIGHT, -speed_pct);
+    }
+    robot_stop();
 }
 

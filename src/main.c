@@ -6,11 +6,14 @@
 #include "copilot.h"
 #include "input_detector.h"
 #include "pilot.h"
+#include "surprises.h"
 
 #ifdef INTOX
 char * intox_address = "127.0.0.1";
 int intox_port = 12301;
 #endif
+
+etat_surprise_t mon_etat;
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +36,7 @@ int main(int argc, char *argv[])
         copilot_init("circuit1.tsv");
     }
     else if (strcmp(mode, "manual") == 0) {
+        surprises_init(&mon_etat);
         input_detector_init();
     }
 

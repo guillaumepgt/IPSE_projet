@@ -43,5 +43,7 @@ void robot_reset_encoder(void);
 
 proximity_t robot_get_proximity(void);
 
+void robot_spin(void);
+
 
 #endif

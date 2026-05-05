@@ -12,11 +12,16 @@
 #include "remote.h"
 #include "robot.h"
 #include "pilot.h"
+#include "surprises.h"
+#include <mrpiz.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
 
 
+extern etat_surprise_t mon_etat;
+#define VITESSE_BOOST 100
+#define VITESSE_CLASSIQUE 50
 
 /**
  * @brief Initialise le détecteur d'entrée.
@@ -47,6 +52,7 @@ void input_detector_init(void){
  *
  * @return Toujours 0 (succès).
  */
+
 int input_detector_run(void){
 
     char *start[] = {"3...", "2...", "1...", "GO !!!"};
@@ -80,6 +86,24 @@ int input_detector_run(void){
 
     while(1)
     {
+
+        surprises_detecter_et_appliquer(&mon_etat);
+
+        if (mon_etat.effet_actif == BONUS_BOOST){
+            robot_set_speed_pct(VITESSE_BOOST);
+            surprises_mise_a_jour_timer(&mon_etat, 10);
+        }
+
+        else if(mon_etat.effet_actif == MALUS_TOUPIE){
+            robot_set_speed_pct(VITESSE_BOOST);
+            robot_spin();
+            mon_etat.effet_actif= AUCUN_EFFET;
+            mrpiz_led_rgb_set(MRPIZ_LED_OFF);
+        }
+        else{
+            robot_set_speed_pct(VITESSE_CLASSIQUE);
+        }
+
         //recupération de la commande
         my_command = remote_get_command();
 
