@@ -5,6 +5,7 @@
 #include "autopilot.h"
 #include "copilot.h"
 #include "input_detector.h"
+#include "pilot.h"
 
 #ifdef INTOX
 char * intox_address = "127.0.0.1";

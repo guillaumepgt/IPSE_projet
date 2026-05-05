@@ -5,6 +5,8 @@
 
 int copilot_init(const char* name_file);
 
+void copilot_run();
+
 int move_provider_update_next_move(move_t* move);
 
 void move_provider_update_nb_move(int* nb);

@@ -1,7 +1,9 @@
 #include "copilot.h"
+#include "pilot.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 static move_t *mouvements = NULL;
 static int total_mouvements = 0;
