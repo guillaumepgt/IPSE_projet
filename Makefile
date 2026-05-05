@@ -44,7 +44,6 @@ $(BUILD_DIR)/remote.o: $(SRC_DIR)/remote.c | $(BUILD_DIR)
 $(BUILD_DIR)/robot.o: $(SRC_DIR)/robot.c | $(BUILD_DIR)
 	$(CC) $(CCFLAGS) -c $(SRC_DIR)/robot.c -o $(BUILD_DIR)/robot.o
 
-# Attention au sous-dossier terminal
 $(BUILD_DIR)/terminal.o: $(SRC_DIR)/terminal/terminal.c | $(BUILD_DIR)
 	$(CC) $(CCFLAGS) -c $(SRC_DIR)/terminal/terminal.c -o $(BUILD_DIR)/terminal.o
 

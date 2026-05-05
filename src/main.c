@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
         copilot_init("circuit1.tsv");
     }
     else if (strcmp(mode, "manual") == 0) {
-        surprises_init(&mon_etat);
         input_detector_init();
+        surprises_init(&mon_etat);
     }
 
     if (strcmp(mode, "manual") != 0) {
