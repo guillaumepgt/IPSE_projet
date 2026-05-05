@@ -16,6 +16,28 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/** @brief Incrémentation de la vitesse de rotation vers la gauche. */
+#define TURN_LEFT_INC -10
+
+/** @brief Incrémentation de la vitesse de rotation vers la droite. */
+#define TURN_RIGHT_INC 10
+
+/** @brief Incrémentation de la vitesse d'avancement. */
+#define AUGMENTATION_VITESSE 10
+
+/** @brief Réduction de la vitesse d'avancement. */
+#define REDUCTION_VITESSE -10
+
+/** @brief Durée de la pause pendant le démarrage, en microsecondes. */
+#define USLEEP1s 1000000
+
+/** @brief Durée de la pause dans la boucle principale, en microsecondes. */
+#define USLEEP50ms 50000
+
+/** @brief Durée de la pause pendant l'attente de la fin d'un mouvement, en microsecondes. */
+#define USLEEP1ms 1000
+
+
 
 
 /**
@@ -53,7 +75,7 @@ int input_detector_run(void){
     for (int i = 0; i < 4; i++) {
         printf("%s\n", start[i]);
         fflush(stdout);
-        usleep(1000000);
+        usleep(USLEEP1s);
     }
     FILE *fichier = fopen("go.txt", "w");
     if (fichier != NULL) {
@@ -87,7 +109,7 @@ int input_detector_run(void){
         obstacle_ou_pas = robot_obstacle_detected();
 
         // Petite pause pour limiter la fréquence de lecture et de traitement
-        usleep(50000);
+        usleep(USLEEP50ms);
 
         /**
          * Si un obstacle est détecté, le robot est immédiatement arrêté.
@@ -133,11 +155,11 @@ int input_detector_run(void){
          */
         case CMD_ROTATION_G:
             move.type = MOVE_TURN;
-            move.magnitude = -10;
+            move.magnitude = TURN_LEFT_INC;
             printf("Tourner à gauche\n");
             pilot_start_move(move);
             while (!pilot_stop_at_target()) {
-                usleep(1000);
+                usleep(USLEEP1ms);
             }
             break;
 
@@ -147,11 +169,11 @@ int input_detector_run(void){
          */
         case CMD_ROTATION_D:
             move.type = MOVE_TURN;
-            move.magnitude = 10;
+            move.magnitude = TURN_RIGHT_INC;
             printf("Tourner à droite\n");
             pilot_start_move(move);
             while (!pilot_stop_at_target()) {
-                usleep(1000);
+                usleep(USLEEP1ms);
             }
             break; 
 
@@ -160,7 +182,7 @@ int input_detector_run(void){
          * La vitesse actuelle du robot est augmentée de 10%.
          */
         case CMD_AUG_VIT:
-            robot_set_speed_pct(robot_get_speed_pct()+10);
+            robot_set_speed_pct(robot_get_speed_pct()+AUGMENTATION_VITESSE);
             printf("Augmenter vitesse -> %d\n", robot_get_speed_pct());
             break; 
 
@@ -169,7 +191,7 @@ int input_detector_run(void){
          * La vitesse actuelle du robot est réduite de 10%.
          */
         case CMD_RED_VIT:
-            robot_set_speed_pct(robot_get_speed_pct ()-10);
+            robot_set_speed_pct(robot_get_speed_pct ()+REDUCTION_VITESSE);
             printf("Réduire vitesse -> %d\n", robot_get_speed_pct());
             break; 
 

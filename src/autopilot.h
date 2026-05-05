@@ -19,6 +19,14 @@
 #define TURN_LEFT 1
 
 /**
+ * @brief Représente les directions possibles pour le robot.
+ */
+typedef enum  {
+    LEFT=0,
+    RIGHT
+}direction_t;
+
+/**
  * @brief Initialise le module autopilot.
  *
  * Initialise les modules nécessaires au déplacement autonome, notamment
@@ -26,6 +34,8 @@
  * Il n'est pas nécessaire d'initialiser d'autres modules avant d'appeler cette fonction.
  */
 void autopilot_init(void);
+
+
 
 /**
  * @brief Lance la boucle principale du pilotage automatique.
