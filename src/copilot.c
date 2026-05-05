@@ -44,6 +44,29 @@ extern int copilot_init(const char* name_file) {
     return 1;
 }
 
+void copilot_run(void) {
+    int nb_mouvements = 0;
+    move_provider_update_nb_move(&nb_mouvements);
+
+    if (nb_mouvements > 0) {
+        move_t *mon_chemin = malloc(nb_mouvements * sizeof(move_t));
+        if (mon_chemin != NULL) {
+            move_provider_update_all_moves(mon_chemin);
+
+            for (int i = 0; i < nb_mouvements; i++) {
+                pilot_start_move(mon_chemin[i]);
+
+                while (!pilot_stop_at_target()) {
+                    usleep(10000);
+                }
+            }
+            free(mon_chemin);
+        }
+    }
+    robot_stop();
+    while(1) { usleep(100000); }
+}
+
 void move_provider_update_nb_move(int* nb) {
     if (nb != NULL) {
         *nb = total_mouvements;

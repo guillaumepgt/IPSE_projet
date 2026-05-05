@@ -48,6 +48,19 @@ void input_detector_init(void){
  * @return Toujours 0 (succès).
  */
 int input_detector_run(void){
+
+    char *start[] = {"3...", "2...", "1...", "GO !!!"};
+    for (int i = 0; i < 4; i++) {
+        printf("%s\n", start[i]);
+        fflush(stdout);
+        usleep(1000000);
+    }
+    FILE *fichier = fopen("go.txt", "w");
+    if (fichier != NULL) {
+        fclose(fichier);
+    }
+
+
     /**
      * @brief Commande actuellement lue depuis le clavier.
      */
