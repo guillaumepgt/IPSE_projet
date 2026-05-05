@@ -45,6 +45,17 @@
  */
 #define FORWARD_STEP           5
 
+/**
+ * @brief Durée de la pause entre chaque itération des verifications de l'atteinte de la cible, en microsecondes.
+ */
+#define USLEEP1ms 1000
+
+/**
+ * @brief Durée de la pause entre chaque itération de la boucle principale
+ * de l'autopilot, en microsecondes.
+ */
+#define USLEEP50ms 50000
+
 
 /**
  * @brief Vérifie si l'avant du robot est dégagé.
@@ -151,7 +162,7 @@ static void doForwardStep(int cm)
 
     pilot_start_move(m);
     while (!pilot_stop_at_target()) {
-        usleep(1000);
+        usleep(USLEEP1ms);
     }
 }
 
@@ -172,7 +183,7 @@ static void doLeftTurn(int mag)
 
     pilot_start_move(m);
     while (!pilot_stop_at_target()) {
-        usleep(1000);
+        usleep(USLEEP1ms);
     }
 }
 
@@ -193,7 +204,7 @@ static void doRightTurn(int mag)
 
     pilot_start_move(m);
     while (!pilot_stop_at_target()) {
-        usleep(1000);
+        usleep(USLEEP1ms);
     }
 }
 
@@ -224,7 +235,7 @@ void autopilot_init(void)
  * Cette fonction ne se termine jamais car elle contient une boucle infinie.
  */
 void autopilot_run(void){
-    while (1){
+    while (true){
         
         proximity_t proximityValues = robot_get_proximity();
         #if DEBUG
@@ -247,17 +258,17 @@ void autopilot_run(void){
 
             if (left_open && right_open) {
                 #if TURN_LEFT
-                    int choice = 0; // Forcer à tourner à gauche en cas de blocage
+                    int choice = DIR_GAUCHE; // Forcer à tourner à gauche en cas de blocage
                 #else
                     int choice = rand() % 2; // Choix aléatoire en cas de blocage
                 #endif
 
                 #if DEBUG
                     printf("Decision: BOTH OPEN -> RANDOM\n");
-                    printf("Random choice: %s\n", choice == 0 ? "LEFT" : "RIGHT");
+                    printf("Random choice: %s\n", choice == DIR_GAUCHE ? "LEFT" : "RIGHT");
                 #endif
 
-                if (choice == 0) {
+                if (choice == DIR_GAUCHE) {
                     doLeftTurn(TURN_STEP);
                 } else {
                     doRightTurn(TURN_STEP);
@@ -278,17 +289,17 @@ void autopilot_run(void){
             else {
 
                 #if TURN_LEFT
-                    int choice = 0; // Forcer à tourner à gauche en cas de blocage
+                    int choice = DIR_GAUCHE; // Forcer à tourner à gauche en cas de blocage
                 #else
                     int choice = rand() % 2; // Choix aléatoire en cas de blocage
                 #endif
 
                 #if DEBUG
                     printf("Decision: BLOCKED -> RANDOM TURN\n");
-                    printf("Random choice: %s\n", choice == 0 ? "LEFT" : "RIGHT");
+                    printf("Random choice: %s\n", choice == DIR_GAUCHE ? "LEFT" : "RIGHT");
                 #endif
 
-                if (choice == 0) {
+                if (choice == DIR_GAUCHE) {
                     doLeftTurn(TURN_STEP);
                 } else {
                     doRightTurn(TURN_STEP);
@@ -296,6 +307,6 @@ void autopilot_run(void){
             }
         }
 
-        usleep(50000);
+        usleep(USLEEP50ms);
     }
 }

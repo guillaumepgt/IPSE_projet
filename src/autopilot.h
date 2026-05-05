@@ -18,13 +18,6 @@
 */
 #define TURN_LEFT 1
 
-/**
- * @brief Représente les directions possibles pour le robot.
- */
-typedef enum  {
-    LEFT=0,
-    RIGHT
-}direction_t;
 
 /**
  * @brief Initialise le module autopilot.

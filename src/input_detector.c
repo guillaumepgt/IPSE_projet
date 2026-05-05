@@ -40,6 +40,7 @@
 
 
 
+
 /**
  * @brief Initialise le détecteur d'entrée.
  *
@@ -161,6 +162,7 @@ int input_detector_run(void){
             while (!pilot_stop_at_target()) {
                 usleep(USLEEP1ms);
             }
+
             break;
 
         /**
@@ -175,6 +177,7 @@ int input_detector_run(void){
             while (!pilot_stop_at_target()) {
                 usleep(USLEEP1ms);
             }
+
             break; 
 
         /**
