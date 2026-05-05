@@ -11,7 +11,6 @@
  */
 
 #include "autopilot.h"
-#include "robot.h"
 #include "pilot.h"
 #include "move.h"
 #include <stdio.h>
