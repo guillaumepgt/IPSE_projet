@@ -20,8 +20,11 @@ void pilot_start_move(move_t move){
     }
 
     else if(move.type==MOVE_TURN ){
-        robot_turn(DIR_DROITE);
-        encoder_target= round(2.53*move.magnitude);
+        if (move.magnitude<0) robot_turn(DIR_GAUCHE);
+        else{
+            robot_turn(DIR_DROITE);
+        }
+        encoder_target= round(2.53*abs(move.magnitude));
 
     }
 
